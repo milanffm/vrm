@@ -1,0 +1,76 @@
+<template>
+	<section class="form-component">
+		<b-form @submit="SubmitToParent">
+			<b-form-input placeholder="Enter title..." v-model="form.title"></b-form-input>
+			<b-form-textarea
+				:maxlength="maxTextareaLength"
+				id="textarea"
+				placeholder="Enter text..."
+				rows="3"
+				v-model="form.text"
+			></b-form-textarea>
+			({{form.text.length}} / {{maxTextareaLength}})
+			<b-form-datepicker id="example-datepicker" v-model="form.date"></b-form-datepicker>
+			<b-button type="submit" variant="primary">Submit</b-button>
+		</b-form>
+	</section>
+</template>
+
+<script>
+export default {
+	name: 'FormComponent',
+	data() {
+		return {
+			form: {
+				id: '',
+				title: '',
+				text: '',
+				date: ''
+			},
+			maxTextareaLength: 300,
+			show: true
+		}
+	},
+	methods: {
+		/**
+		 * submit form to parent component
+		 * @param evt
+		 */
+		SubmitToParent(evt) {
+			evt.preventDefault()
+			this.$emit('sendFormData', {
+				data: this.form, doneFn: () => {
+					console.log('clear form')
+					// clear form after parent component received data
+					this.clearForm();
+				}
+			});
+		},
+		/**
+		 * clear form
+		 */
+		clearForm() {
+			this.form.title = '';
+			this.form.text = '';
+			this.form.date = '';
+		}
+	}
+}
+</script>
+
+<style scoped>
+
+	.form-component {
+		max-width: 500px;
+		margin: 0 auto;
+	}
+
+	.form-control {
+		margin: 20px 0 5px;
+	}
+
+	button {
+		margin: 10px;
+	}
+
+</style>
