@@ -33,7 +33,7 @@ export default {
 		 */
 		getFormComponentData({data, doneFn}) {
 			if (this.list.find( li => data.id === li.id)) {
-				this.list[this.list.findIndex(el => el.id === data.id)] = Object.assign({},data);
+				this.list[this.list.findIndex(el => el.id === data.id)] = data;
 			} else {
 				this.list.push({
 					id: data.id,
@@ -55,8 +55,7 @@ export default {
 		 * @param id
 		 */
 		sendListItemToForm(id){
-			// console.log(id);
-			this.listItem = Object.assign({}, this.list.find( li => id === li.id));
+			this.listItem = { ... this.list.find( li => id === li.id)};
 		}
 	}
 }
