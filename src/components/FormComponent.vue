@@ -1,7 +1,12 @@
 <template>
 	<section class="form-component">
 		<b-form @submit="SubmitToParent">
-			<b-form-input placeholder="Enter title..." v-model="form.title"></b-form-input>
+			<b-form-input
+				placeholder="Enter title..."
+				v-model="form.title"
+				:maxLength="maxTitleLength"
+			></b-form-input>
+			({{form.title.length}} / {{maxTitleLength}})
 			<b-form-textarea
 				:maxlength="maxTextareaLength"
 				id="textarea"
@@ -19,6 +24,9 @@
 <script>
 export default {
 	name: 'FormComponent',
+	props: {
+		parentItem: Object
+	},
 	data() {
 		return {
 			form: {
@@ -27,8 +35,15 @@ export default {
 				text: '',
 				date: ''
 			},
-			maxTextareaLength: 300,
-			show: true
+			maxTitleLength: 100,
+			maxTextareaLength: 300
+		}
+	},
+	watch: {
+		parentItem: function(newVal) {
+			if (newVal.id) {
+				this.form = newVal;
+			}
 		}
 	},
 	methods: {
@@ -38,10 +53,12 @@ export default {
 		 */
 		SubmitToParent(evt) {
 			evt.preventDefault()
+			if (this.form.id.length < 1) {
+				this.form.id = Math.random().toString(36).substring(7);
+			}
 			this.$emit('sendFormData', {
-				data: this.form, doneFn: () => {
-					console.log('clear form')
-					// clear form after parent component received data
+				data: { ... this.form },
+				doneFn: () => {
 					this.clearForm();
 				}
 			});
@@ -50,6 +67,7 @@ export default {
 		 * clear form
 		 */
 		clearForm() {
+			this.form.id = '';
 			this.form.title = '';
 			this.form.text = '';
 			this.form.date = '';

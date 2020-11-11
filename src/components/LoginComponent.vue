@@ -26,12 +26,12 @@ export default {
 		login(evt) {
             evt.preventDefault()
 			if (localStorage.getItem('user')) {
-				this.$router.push('Detail')
+				this.$router.push('detail')
 			}
 			else if (this.savedUser.name === this.user.name && this.savedUser.psw === this.user.psw) {
 				console.log('Login success');
 				localStorage.setItem('user', JSON.stringify(this.user.name));
-				this.$router.push('Detail')
+				this.$router.push('detail')
 			} else {
 				console.error('wrong password: try "vrm" and "test"');
 			}
