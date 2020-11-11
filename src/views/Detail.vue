@@ -1,7 +1,8 @@
 <template>
 	<div class="detail">
 		<img alt="Vue logo" src="../assets/logo.png">
-		<FormComponent/>
+		<FormComponent @sendFormData="getFormComponentData"/>
+		{{list}}
 	</div>
 </template>
 
@@ -9,9 +10,28 @@
 	import FormComponent from '@/components/FormComponent'
 
 	export default {
-		name: 'Home',
+		name: 'Detail',
 		components: {
 			FormComponent
+		},
+		data() {
+			return {
+				list: [],
+			}
+		},
+		methods: {
+			/**
+			 * get data from FormComponent and notify form if complete
+			 * @param data
+			 * @param done
+			 */
+			getFormComponentData({ data, doneFn }){
+				console.log(data.title, data.text, data.date);
+				this.list.push({title: data.title, text: data.text, date: data.date})
+				if (doneFn) {
+					doneFn()
+				}
+			}
 		}
 	}
 </script>

@@ -1,74 +1,68 @@
 <template>
 	<section class="form-component">
-		<b-form @submit="onSubmit" @reset="onReset" v-if="show">
-			<b-form-input v-model="form.title" placeholder="Enter title..."></b-form-input>
+		<b-form @submit="SubmitToParent">
+			<b-form-input placeholder="Enter title..." v-model="form.title"></b-form-input>
 			<b-form-textarea
-					id="textarea"
-					v-model="form.text"
-					placeholder="Enter text..."
-					rows="3"
-					:maxlength="maxTextareaLength"
+				:maxlength="maxTextareaLength"
+				id="textarea"
+				placeholder="Enter text..."
+				rows="3"
+				v-model="form.text"
 			></b-form-textarea>
 			({{form.text.length}} / {{maxTextareaLength}})
-			<div>
-				<b-form-datepicker id="example-datepicker" v-model="form.date" ></b-form-datepicker>
-			</div>
+			<b-form-datepicker id="example-datepicker" v-model="form.date"></b-form-datepicker>
 			<b-button type="submit" variant="primary">Submit</b-button>
-			<b-button type="reset" variant="danger">Reset</b-button>
 		</b-form>
 	</section>
 </template>
 
 <script>
-	export default {
-		name: 'FormComponent',
-		data() {
-			return {
-				form: {
-					title: '',
-					text: '',
-					date: ''
-				},
-				maxTextareaLength: 300,
-				show: true
-
-			}
-		},
-		methods: {
-			/**
-			 * submit form
-			 * @param evt
-			 */
-			onSubmit(evt) {
-				evt.preventDefault()
-				console.log(this.form)
-
+export default {
+	name: 'FormComponent',
+	data() {
+		return {
+			form: {
+				id: '',
+				title: '',
+				text: '',
+				date: ''
 			},
-			/**
-			 * reset form
-			 * @param evt
-			 */
-			onReset(evt) {
-				evt.preventDefault()
-				// Reset our form values
-				this.form.title = ''
-				this.form.text = ''
-				this.form.date = ''
-				// Trick to reset/clear native browser form validation state
-				this.show = false
-				this.$nextTick(() => {
-					this.show = true
-				})
-			}
+			maxTextareaLength: 300,
+			show: true
+		}
+	},
+	methods: {
+		/**
+		 * submit form to parent component
+		 * @param evt
+		 */
+		SubmitToParent(evt) {
+			evt.preventDefault()
+			this.$emit('sendFormData', {
+				data: this.form, doneFn: () => {
+					console.log('clear form')
+					// clear form after parent component received data
+					this.clearForm();
+				}
+			});
+		},
+		/**
+		 * clear form
+		 */
+		clearForm() {
+			this.form.title = '';
+			this.form.text = '';
+			this.form.date = '';
 		}
 	}
+}
 </script>
 
 <style scoped>
 
 	.form-component {
 		max-width: 500px;
-		margin:  0 auto;
+		margin: 0 auto;
 	}
 
 	.form-control {
