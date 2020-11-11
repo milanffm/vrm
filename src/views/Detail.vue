@@ -1,10 +1,10 @@
 <template>
 	<div class="detail">
 		<img alt="Vue logo" src="../assets/logo.png">
-		<FormComponent @sendFormData="getFormComponentData"/>
-		<ul class="list">
+		<FormComponent :parent-item="listItem" @sendFormData="getFormComponentData"/>
+		<ul class="list" v-if="showList">
 			<li v-for="li in list" :key="li.id">
-				{{li.title}} | {{ li.date }} <b-button @click="editListItem(li.id)">Edit</b-button>
+				{{li.title}} | {{ li.date }} <b-button @click="sendListItemToForm(li.id)">Edit</b-button>
 			</li>
 		</ul>
 	</div>
@@ -21,6 +21,8 @@ export default {
 	data() {
 		return {
 			list: [],
+			listItem: {},
+			showList: true
 		}
 	},
 	methods: {
@@ -30,15 +32,31 @@ export default {
 		 * @param doneFn
 		 */
 		getFormComponentData({data, doneFn}) {
-			console.log(data.id, data.title, data.text, data.date);
-			this.list.push({id: data.id, title: data.title, text: data.text, date: data.date})
+			if (this.list.find( li => data.id === li.id)) {
+				this.list[this.list.findIndex(el => el.id === data.id)] = Object.assign({},data);
+			} else {
+				this.list.push({
+					id: data.id,
+					title: data.title,
+					text: data.text,
+					date: data.date
+				})
+			}
+			this.showList = false;
+			this.$nextTick(() => {
+				this.showList = true;
+			});
 			if (doneFn) {
 				doneFn();
 			}
 		},
-		editListItem(id){
-			console.log(id);
-			console.log(this.list.find( li => id === li.id));
+		/**
+		 * send list item to FormComponent
+		 * @param id
+		 */
+		sendListItemToForm(id){
+			// console.log(id);
+			this.listItem = Object.assign({}, this.list.find( li => id === li.id));
 		}
 	}
 }

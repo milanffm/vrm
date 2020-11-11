@@ -19,6 +19,9 @@
 <script>
 export default {
 	name: 'FormComponent',
+	props: {
+		parentItem: Object
+	},
 	data() {
 		return {
 			form: {
@@ -28,6 +31,13 @@ export default {
 				date: ''
 			},
 			maxTextareaLength: 300
+		}
+	},
+	watch: {
+		parentItem: function(newVal) {
+			if (newVal.id) {
+				this.form = newVal;
+			}
 		}
 	},
 	methods: {
@@ -51,7 +61,7 @@ export default {
 		 * clear form
 		 */
 		clearForm() {
-			console.log('clear form')
+			// console.log('clear form')
 			this.form.id = '';
 			this.form.title = '';
 			this.form.text = '';
