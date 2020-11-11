@@ -13,7 +13,11 @@ const routes = [
 	{
 		path: '/detail',
 		name: 'Detail',
-		component: () => import(/* webpackChunkName: "about" */ '@/views/Detail.vue')
+		component: () => import(/* webpackChunkName: "about" */ '@/views/Detail.vue'),
+		beforeEnter: (to, from, next) => {
+			const isAuthenticated = !!localStorage.getItem('user');
+			isAuthenticated ? next() : next({ name: 'Login' })
+		}
 	}
 ]
 
