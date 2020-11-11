@@ -12,7 +12,6 @@
 			({{form.text.length}} / {{maxTextareaLength}})
 			<div>
 				<b-form-datepicker id="example-datepicker" v-model="form.date" ></b-form-datepicker>
-				<p>Value: '{{ form.date }}'</p>
 			</div>
 			<b-button type="submit" variant="primary">Submit</b-button>
 			<b-button type="reset" variant="danger">Reset</b-button>
@@ -42,7 +41,7 @@
 			 */
 			onSubmit(evt) {
 				evt.preventDefault()
-				console.log(JSON.stringify(this.form))
+				console.log(this.form)
 
 			},
 			/**
@@ -77,7 +76,7 @@
 	}
 
 	button {
-		margin: 0 20px;
+		margin: 10px;
 	}
 
 </style>
