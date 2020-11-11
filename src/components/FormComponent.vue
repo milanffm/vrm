@@ -27,8 +27,7 @@ export default {
 				text: '',
 				date: ''
 			},
-			maxTextareaLength: 300,
-			show: true
+			maxTextareaLength: 300
 		}
 	},
 	methods: {
@@ -38,9 +37,11 @@ export default {
 		 */
 		SubmitToParent(evt) {
 			evt.preventDefault()
+			if (this.form.id.length < 1) {
+				this.form.id = Math.random().toString(36).substring(7);
+			}
 			this.$emit('sendFormData', {
 				data: this.form, doneFn: () => {
-					console.log('clear form')
 					// clear form after parent component received data
 					this.clearForm();
 				}
@@ -50,6 +51,8 @@ export default {
 		 * clear form
 		 */
 		clearForm() {
+			console.log('clear form')
+			this.form.id = '';
 			this.form.title = '';
 			this.form.text = '';
 			this.form.date = '';
